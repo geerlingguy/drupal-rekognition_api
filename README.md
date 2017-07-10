@@ -1,6 +1,6 @@
 # Rekognition API
 
-This module interacts with the AWS Rekognition service to identify objects and faces in photos. The module requires integration with an active Amazon Web Services (AWS) account, and also requires some initial setup in order to use with a Drupal site using the Media and Media Image modules.
+This module interacts with the [AWS Rekognition](https://aws.amazon.com/rekognition/) service to identify objects and faces in photos. The module requires integration with an active [Amazon Web Services](https://aws.amazon.com) (AWS) account, and also requires some initial setup in order to use with a Drupal site using the [Media Entity](https://www.drupal.org/project/media_entity) and [Media Entity Image](https://www.drupal.org/project/media_entity_image) modules.
 
 ## Requirements
 
