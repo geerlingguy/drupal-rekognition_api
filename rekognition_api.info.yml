@@ -1,0 +1,6 @@
+name: Rekognition API
+type: module
+description: 'Endpoints for AWS Lambda Rekognition integration.'
+package: media
+version: '8.0'
+core: '8.x'
