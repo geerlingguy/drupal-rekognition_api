@@ -19,12 +19,19 @@ Also, you must be using the [S3 File System](https://www.drupal.org/project/s3fs
 
 ## AWS S3 Setup
 
-TODO.
+TODO: Describe how to set up an Amazon S3 bucket along with a trigger for AWS Lambda.
 
 ## AWS Lambda Setup
 
-TODO.
+TODO: Describe how to set up Lambda using the CloudFormation template and `index.js` inside the `lambda` directory.
 
 ## Authors
 
-TODO.
+This project was initially created during Acquia's 2017 Build Week Hackathon by:
+
+  - Matthew Wagner
+  - Glenn Pratt
+  - ASH Heath
+  - Jeff Geerling
+  - Rok Zlender
+  - Meagan White

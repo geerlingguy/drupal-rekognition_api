@@ -1,0 +1,24 @@
+﻿AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An Amazon S3 trigger that detects objects and faces via Rekognition.
+
+Resources:
+  DrupalMediaRekognition:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs6.10
+      CodeUri: .
+      Description: An Amazon S3 trigger that detects objects and faces.
+      MemorySize: 128
+      Timeout: 63
+      Role: 'arn:aws:iam::*:role/service-role/SERVICE_ROLE_HERE'
+      Environment:
+        Variables:
+          COLLECTION: COLLECTION-HERE
+          USER: DRUPAL-USER-ACCOUNT-HERE
+          PASS: DRUPAL-ACCOUNT-PASSWORD-HERE
+          DRUPAL_URL: DRUPAL-SITE-URL-HERE
+      Tags:
+        application: drupal
+        drupal_type: media
