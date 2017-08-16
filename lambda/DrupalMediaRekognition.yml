@@ -1,24 +1,107 @@
 ﻿AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
-Description: An Amazon S3 trigger that detects objects and faces via Rekognition.
+Description: S3 Lambda function to process S3 images via Rekognition.
+
+Parameters:
+  DrupalUrl:
+    Type: String
+    Description: URL of the Drupal site to be used for Rest API calls.
+  DrupalUsername:
+    Type: String
+    Description: Username of the account used for Rest API calls in Drupal.
+  DrupalPassword:
+    Type: String
+    Description: Password of the account used for Rest API calls in Drupal.
+    NoEcho: true
 
 Resources:
+  RekognitionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: DrupalMediaRekognitionRole
+      Path: /service-role/
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Policies:
+        - PolicyName: "DrupalMediaRekognition"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "s3:*"
+                Resource:
+                  - "arn:aws:s3:::drupal-media-rekognition"
+              - Effect: "Allow"
+                Action:
+                  - "s3:*"
+                Resource:
+                  - "arn:aws:s3:::drupal-media-rekognition/*"
+              - Effect: "Allow"
+                Action:
+                  - "rekognition:*"
+                Resource:
+                  - "*"
+
   DrupalMediaRekognition:
-    Type: 'AWS::Serverless::Function'
+    Type: "AWS::Serverless::Function"
     Properties:
       Handler: index.handler
       Runtime: nodejs6.10
-      CodeUri: .
+      CodeUri: s3://drupal-lambda/drupal-media-rekognition.zip
       Description: An Amazon S3 trigger that detects objects and faces.
       MemorySize: 128
-      Timeout: 63
-      Role: 'arn:aws:iam::*:role/service-role/SERVICE_ROLE_HERE'
+      Timeout: 60
+      Role:
+        'Fn::GetAtt': RekognitionRole.Arn
       Environment:
         Variables:
-          COLLECTION: COLLECTION-HERE
-          USER: DRUPAL-USER-ACCOUNT-HERE
-          PASS: DRUPAL-ACCOUNT-PASSWORD-HERE
-          DRUPAL_URL: DRUPAL-SITE-URL-HERE
+          COLLECTION: drupal-media-rekognition
+          DRUPAL_URL:
+            Ref: DrupalUrl
+          DRUPAL_USERNAME:
+            Ref: DrupalUsername
+          DRUPAL_PASSWORD:
+            Ref: DrupalPassword
       Tags:
         application: drupal
         drupal_type: media
+
+  DrupalMediaS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: drupal-media-rekognition
+      Tags:
+        - Key: application
+          Value: drupal
+        - Key: drupal_type
+          Value: media
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Function:
+              'Fn::GetAtt': DrupalMediaRekognition.Arn
+            Event: "s3:ObjectCreated:Put"
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: images/
+
+  BucketPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName:
+        Ref: DrupalMediaRekognition
+      Principal: s3.amazonaws.com
+      SourceAccount:
+        'Fn::Sub': "${AWS::AccountId}"
+      SourceArn:
+        'Fn::Join': [":", ['arn', 'aws', 's3', '', '', 'drupal-media-rekognition']]

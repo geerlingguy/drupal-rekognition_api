@@ -12,7 +12,7 @@ const aws = require('aws-sdk');
 const http = require('http');
 const drupal_url = process.env.DRUPAL_URL;
 const object_endpoint = "/rekognition_api/objects?_format=json";
-const drupal_auth = "Basic " + new Buffer(process.env.USER + ":" + process.env.PASS).toString("base64");
+const drupal_auth = "Basic " + new Buffer(process.env.DRUPAL_USERNAME + ":" + process.env.DRUPAL_PASSWORD).toString("base64");
 const s3 = new aws.S3({ apiVersion: '2006-03-01' });
 var rekognition = new aws.Rekognition({apiVersion: '2016-06-27'});
 

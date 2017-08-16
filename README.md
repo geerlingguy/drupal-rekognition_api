@@ -17,21 +17,19 @@ This module assumes you have configured a few entity types:
 
 Also, you must be using the [S3 File System](https://www.drupal.org/project/s3fs) module to store all Media Image images on Amazon S3 in a specific bucket.
 
-## AWS S3 Setup
+## AWS Setup - S3, Lambda, and Rekognition
 
-TODO: Describe how to set up an Amazon S3 bucket along with a trigger for AWS Lambda.
+This module includes an AWS CloudFormation stack template (inside the `lambda` folder) which allows you to quickly and automatically set up all the required resources and permissions to integrate S3, Lambda, and Rekognition so they work with your Drupal site.
 
-## AWS Lambda Setup
-
-TODO: Describe how to set up Lambda using the CloudFormation template and `index.js` inside the `lambda` directory.
+See the detailed guide that's part of the [Drupal Photo Gallery](https://github.com/geerlingguy/drupal-photo-gallery) documentation for more details on how to use the AWS CLI to deploy this CloudFormation stack inside your own account.
 
 ## Authors
 
 This project was initially created during Acquia's 2017 Build Week Hackathon by:
 
-  - Matthew Wagner
-  - Glenn Pratt
-  - ASH Heath
-  - Jeff Geerling
-  - Rok Zlender
-  - Meagan White
+  - [Matthew Wagner](https://ma.ttwagner.com)
+  - [Glenn Pratt](https://about.me/glennpratt)
+  - [ASH Heath](http://www.burnashburn.com)
+  - [Jeff Geerling](https://www.jeffgeerling.com)
+  - [Rok Zlender](https://twitter.com/Zlender)
+  - [Meagan White](https://twitter.com/MeaganWhite_)
