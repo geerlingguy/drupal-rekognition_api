@@ -15,7 +15,8 @@ use Drupal\rest\ResourceResponse;
  *   id = "rekognition_api_resource",
  *   label = @Translation("Rekognition API Resource"),
  *   uri_paths = {
- *     "canonical" = "/rekognition_api/objects"
+ *     "canonical" = "/rekognition_api/objects",
+ *     "https://www.drupal.org/link-relations/create" = "/rekognition_api/objects/create"
  *   }
  * )
  */
@@ -32,15 +33,18 @@ class RekognitionAPIResource extends ResourceBase {
   }
 
   /**
-   * Responds to entity PUT requests.
+   * Responds to entity POST requests.
    *
    * @param string $body
-   *   The body of the PUT request.
+   *   The body of the POST request.
    *
    * @return ResourceResponse
    */
-  public function put($body) {
+  public function post($body) {
     $jsonBody = json_encode($body);
+
+    // Log the body of the request.
+    // \Drupal::logger('rekognition_api')->notice("POST body is:\n{$jsonBody}");
 
     // Find the image.
     $uri = "s3://{$body['Name']}";
