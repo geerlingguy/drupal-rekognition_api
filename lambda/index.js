@@ -49,7 +49,7 @@ exports.handler = (event, context, callback) => {
             };
 
             var reqPost = http.request(options_put, function(res) {
-                console.log("statusCode: ", res.statusCode);
+                console.log("label PUT request statusCode: ", res.statusCode);
                 res.on('data', function (chunk) {
                     body += chunk;
                 });
@@ -61,9 +61,11 @@ exports.handler = (event, context, callback) => {
                 Labels: data.Labels
             }
 
-            console.log(jsonObject);
-            reqPost.write(JSON.stringify(jsonObject));
-            reqPost.end();
+            // console.log("labels: ", jsonObject);
+            setTimeout(function() {
+              reqPost.write(JSON.stringify(jsonObject));
+              reqPost.end();
+            }, 4000);
         }
     });
     delete params.MinConfidence
@@ -85,14 +87,14 @@ exports.handler = (event, context, callback) => {
                 rekognition.searchFaces(search_params, function(err2, data2) {
                     if (err) console.log(err2, err2.stack); // an error occurred
                     else {
-                        console.log(data2)
-                        console.log(data2.FaceMatches.length)
+                        // console.log(data2);
+                        // console.log(data2.FaceMatches.length);
                         if (data2.FaceMatches.length > 0) {
                             face.FaceMatches = data2.FaceMatches;
-                            console.log(face)
+                            // console.log(face);
                         }
                         response_faces.push(face);
-                        console.log(JSON.stringify(response_faces));
+                        // console.log(JSON.stringify(response_faces));
                         // the PUT options
                         var options_put = {
                             host: drupal_url,
@@ -105,7 +107,7 @@ exports.handler = (event, context, callback) => {
                         };
 
                         var reqPost = http.request(options_put, function(res) {
-                            console.log("statusCode: ", res.statusCode);
+                            console.log("face PUT request statusCode: ", res.statusCode);
                             res.on('data', function (chunk) {
                                 body += chunk;
                             });
@@ -117,9 +119,10 @@ exports.handler = (event, context, callback) => {
                             Faces: response_faces
                         }
 
-                        console.log(jsonFacesObject);
-                        reqPost.write(JSON.stringify(jsonFacesObject));
-                        reqPost.end();
+                        setTimeout(function() {
+                            reqPost.write(JSON.stringify(jsonFacesObject));
+                            reqPost.end();
+                        }, 5000);
                     }
                 });
             });
