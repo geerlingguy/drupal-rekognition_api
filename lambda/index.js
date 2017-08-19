@@ -2,9 +2,9 @@
 //
 //   - Receives an event call when an image is stored in an S3 bucket.
 //   - Detects Labels in said image via Rekognition.
-//     - If any are found, send PUT with data to Drupal site (DRUPAL_URL).
+//     - If any are found, send POST with data to Drupal site (DRUPAL_URL).
 //   - Detects Faces in said image via Rekognition.
-//     - If any are found, send PUT with data to Drupal site (DRUPAL_URL).
+//     - If any are found, send POST with data to Drupal site (DRUPAL_URL).
 
 'use strict';
 
@@ -37,19 +37,19 @@ exports.handler = (event, context, callback) => {
     rekognition.detectLabels(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred.
         else {
-            // PUT options.
-            var options_put = {
+            // POST options.
+            var options_post = {
                 host: drupal_url,
                 path: object_endpoint,
-                method: "PUT",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": drupal_auth,
                 }
             };
 
-            var reqPost = http.request(options_put, function(res) {
-                console.log("label PUT request statusCode: ", res.statusCode);
+            var reqPost = http.request(options_post, function(res) {
+                console.log("label POST request statusCode: ", res.statusCode);
                 res.on('data', function (chunk) {
                     body += chunk;
                 });
@@ -75,7 +75,7 @@ exports.handler = (event, context, callback) => {
     params["CollectionId"] = process.env.COLLECTION
     var response_faces = [];
     rekognition.indexFaces(params, function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
+        if (err) console.log(err, err.stack);
         else {
             data.FaceRecords.forEach(function(face) {
                 var search_params = {
@@ -85,7 +85,7 @@ exports.handler = (event, context, callback) => {
                     MaxFaces: 10
                 };
                 rekognition.searchFaces(search_params, function(err2, data2) {
-                    if (err) console.log(err2, err2.stack); // an error occurred
+                    if (err) console.log(err2, err2.stack);
                     else {
                         // console.log(data2);
                         // console.log(data2.FaceMatches.length);
@@ -95,19 +95,19 @@ exports.handler = (event, context, callback) => {
                         }
                         response_faces.push(face);
                         // console.log(JSON.stringify(response_faces));
-                        // the PUT options
-                        var options_put = {
+                        // the POST options
+                        var options_post = {
                             host: drupal_url,
                             path: object_endpoint,
-                            method: "PUT",
+                            method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
                                 "Authorization": drupal_auth,
                             }
                         };
 
-                        var reqPost = http.request(options_put, function(res) {
-                            console.log("face PUT request statusCode: ", res.statusCode);
+                        var reqPost = http.request(options_post, function(res) {
+                            console.log("face POST request statusCode: ", res.statusCode);
                             res.on('data', function (chunk) {
                                 body += chunk;
                             });
