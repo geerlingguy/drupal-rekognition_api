@@ -1,5 +1,5 @@
 {
-  "Bucket":"hackathon-2017-mwagner",
+  "Bucket":"drupal-media-rekognition",
   "Faces":[
     {
       "Face":{
@@ -45,5 +45,5 @@
       "Name":"Snow"
     }
   ],
-  "Name":"images/imgp6191.jpg"
+  "Name":"images/test-image.jpg"
 }
