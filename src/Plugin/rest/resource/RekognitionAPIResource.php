@@ -87,9 +87,18 @@ class RekognitionAPIResource extends ResourceBase {
           throw new \Exception("FaceId is null");
         }
         $faceId = $faceInfo['Face']['FaceId'];
-        $similarFaceIds = $this->extractSimilarFaceIds($faceInfo['FaceMatches']);
-        $nameNodeId = $this->findOrCreateName($similarFaceIds);
-        $faceNodeIds[] = $this->createFace($faceId, $nameNodeId);
+
+        // If there are similar faces, use FaceMatches ID(s).
+        if (!empty($faceInfo['FaceMatches'])) {
+          $similarFaceIds = $this->extractSimilarFaceIds($faceInfo['FaceMatches']);
+          $nameNodeId = $this->findOrCreateName($similarFaceIds);
+          $faceNodeIds[] = $this->createFace($faceId, $nameNodeId);
+        }
+        // If this is a new face, create a name and face for it.
+        else {
+          $nameNodeId = $this->findOrCreateName([$faceId]);
+          $faceNodeIds[] = $this->createFace($faceId, $nameNodeId);
+        }
       }
       $jsonFaces = json_encode($faceNodeIds);
 
