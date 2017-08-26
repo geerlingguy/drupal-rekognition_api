@@ -29,6 +29,8 @@ Resources:
                 - "lambda.amazonaws.com"
             Action:
               - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/CloudWatchFullAccess'
       Policies:
         - PolicyName: "DrupalMediaRekognition"
           PolicyDocument:
