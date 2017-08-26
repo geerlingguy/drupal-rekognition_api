@@ -37,6 +37,13 @@ exports.handler = (event, context, callback) => {
     rekognition.detectLabels(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred.
         else {
+            var jsonObject = {
+                Bucket: bucket,
+                Name: key,
+                Labels: data.Labels
+            }
+            var body = JSON.stringify(jsonObject);
+
             // POST options.
             var options_post = {
                 host: drupal_url,
@@ -44,6 +51,7 @@ exports.handler = (event, context, callback) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Content-Length": Buffer.byteLength(body),
                     "Authorization": drupal_auth,
                 }
             };
@@ -55,15 +63,9 @@ exports.handler = (event, context, callback) => {
                 });
             });
 
-            var jsonObject = {
-                Bucket: bucket,
-                Name: key,
-                Labels: data.Labels
-            }
-
             // console.log("labels: ", jsonObject);
             setTimeout(function() {
-              reqPost.write(JSON.stringify(jsonObject));
+              reqPost.write(body);
               reqPost.end();
             }, 4000);
         }
@@ -94,6 +96,13 @@ exports.handler = (event, context, callback) => {
                             // console.log(face);
                         }
                         response_faces.push(face);
+                        var jsonFacesObject = {
+                            Bucket: bucket,
+                            Name: key,
+                            Faces: response_faces
+                        }
+                        var body = JSON.stringify(jsonFacesObject);
+
                         // console.log(JSON.stringify(response_faces));
                         // the POST options
                         var options_post = {
@@ -102,6 +111,7 @@ exports.handler = (event, context, callback) => {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
+                                "Content-Length": Buffer.byteLength(body),
                                 "Authorization": drupal_auth,
                             }
                         };
@@ -113,14 +123,8 @@ exports.handler = (event, context, callback) => {
                             });
                         });
 
-                        var jsonFacesObject = {
-                            Bucket: bucket,
-                            Name: key,
-                            Faces: response_faces
-                        }
-
                         setTimeout(function() {
-                            reqPost.write(JSON.stringify(jsonFacesObject));
+                            reqPost.write(body);
                             reqPost.end();
                         }, 5000);
                     }
