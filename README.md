@@ -19,7 +19,7 @@ Also, you must be using the [S3 File System](https://www.drupal.org/project/s3fs
 
 ## AWS Setup - S3, Lambda, and Rekognition
 
-This module includes an AWS CloudFormation stack template (inside the `lambda` folder) which allows you to quickly and automatically set up all the required resources and permissions to integrate S3, Lambda, and Rekognition so they work with your Drupal site.
+This module includes an AWS CloudFormation stack template (inside the `lambda` folder) for quick and automatic set up of all the required resources and permissions to integrate S3, Lambda, and Rekognition so they work with your Drupal site.
 
 See the detailed guide that's part of the [Drupal Photo Gallery](https://github.com/geerlingguy/drupal-photo-gallery) documentation for more details on how to use the AWS CLI to deploy this CloudFormation stack inside your own account.
 
